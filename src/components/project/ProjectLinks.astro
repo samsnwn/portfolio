@@ -1,0 +1,23 @@
+---
+import { safeLinks } from '../../lib/content';
+
+interface Props {
+  liveUrl?: string;
+  repoUrl?: string;
+}
+const links = safeLinks(Astro.props);
+---
+
+{
+  links.length > 0 && (
+    <ul class="flex flex-wrap gap-3">
+      {links.map((l) => (
+        <li>
+          <a class="neon-border inline-block px-4 py-2 font-semibold text-cyan hover:bg-cyan hover:text-bg" href={l.href} rel="noopener">
+            {l.label === 'Live' ? 'Visit live site' : 'View code on GitHub'}
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}

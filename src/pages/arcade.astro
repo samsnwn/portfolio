@@ -1,0 +1,32 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import StatusTag from '../components/project/StatusTag.astro';
+import { byOrder } from '../lib/content';
+
+const games = byOrder((await getCollection('arcade')).map((e) => ({ ...e.data, id: e.id })));
+---
+
+<BaseLayout title="Arcade · Samuel Castillo Glantz" description="My 42 projects, compiled from the original C code and playable in the browser.">
+  <header class="pt-14">
+    <h1 class="font-display fx-glitch glow-magenta text-xl sm:text-3xl">Arcade</h1>
+    <p class="mt-5 max-w-[62ch] text-lg text-text/90">
+      My most visual 42 projects. Each one is being ported to run my original C code in the browser. Pick a cabinet
+      to read its briefing.
+    </p>
+  </header>
+  <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    {games.map((g) => (
+      <li>
+        <a href={`/play/${g.id}`} class="cabinet block h-full p-5">
+          <span class="flex items-start justify-between gap-3">
+            <span class="font-display text-sm text-text">{g.title}</span>
+            <StatusTag status={g.status} />
+          </span>
+          <span class="mt-4 block text-text/85">{g.briefing.summary}</span>
+          <span class="mt-4 block text-sm text-muted">42 · Rank {g.rank}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>

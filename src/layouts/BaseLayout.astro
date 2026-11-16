@@ -1,0 +1,57 @@
+---
+import '../styles/global.css';
+import Hud from '../components/hud/Hud';
+import Analytics from '@vercel/analytics/astro';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const canonical = new URL(Astro.url.pathname.replace(/\/$/, '') || '/', Astro.site);
+const ogImage = new URL('/og.png', Astro.site);
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="en" data-fx="on">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0b0614" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <Analytics />
+    <script is:inline>
+      // Apply the saved effects preference before first paint. Storage may be blocked.
+      try {
+        var p = JSON.parse(localStorage.getItem('portfolio.prefs') || '{}');
+        if (p && p.fx === false) document.documentElement.dataset.fx = 'off';
+      } catch (e) {}
+    </script>
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Hud client:load />
+    <main id="main" tabindex="-1" class="mx-auto w-full max-w-6xl px-4 sm:px-8">
+      <slot />
+    </main>
+    <footer class="mx-auto mt-24 flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-10 text-sm text-muted sm:px-8">
+      <p>&copy; {year} Samuel Castillo Glantz</p>
+      <nav aria-label="Legal" class="flex gap-6">
+        <a class="underline-offset-4 hover:text-cyan hover:underline" href="/impressum">Impressum</a>
+        <a class="underline-offset-4 hover:text-cyan hover:underline" href="/privacy">Privacy</a>
+      </nav>
+    </footer>
+  </body>
+</html>

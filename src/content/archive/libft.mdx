@@ -1,0 +1,17 @@
+---
+title: libft
+rank: 0
+order: 1
+briefing:
+  summary: My own C standard library, rebuilt from scratch. It covers string, memory and character functions plus a linked-list API, and I reused it in every later 42 project.
+  skills: [Memory management, Pointer arithmetic, API design]
+  tech: [C, Makefile, Static libraries]
+---
+
+The first project of the 42 curriculum. 42 bans almost all of the standard library, so everything later is built on top of this one. It includes `ft_strlcpy`, `ft_memmove` (which handles overlapping memory), `ft_split`, `ft_itoa`, and a singly linked-list API (`ft_lstnew`, `ft_lstadd_back`, `ft_lstclear`…) that frees nodes through a callback.
+
+```c
+void	ft_lstclear(t_list **lst, void (*del)(void *))
+```
+
+**What I learned:** to read man pages closely enough to match every edge case, such as `NULL` inputs, zero sizes and overlapping memory, and to write a Makefile that only recompiles what has changed.

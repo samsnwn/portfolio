@@ -1,0 +1,40 @@
+---
+title: NotAnotherCards
+order: 2
+status: live
+liveUrl: https://notanothercards.com
+briefing:
+  summary: A language-learning app built on spaced-repetition flashcards. It has web and mobile clients, offline sync, AI-generated cards, authentication and learning statistics, all in a TypeScript monorepo with production monitoring.
+  skills: [Full-stack product development, AI integration, Observability, Team collaboration]
+  tech: [TypeScript, NestJS, Drizzle, React, Expo / React Native, PostgreSQL, Docker, Prometheus, Grafana]
+crew:
+  members:
+    - login: amoiseik
+      url: https://profile.intra.42.fr/users/amoiseik
+    - login: dgomez-a
+      url: https://profile.intra.42.fr/users/dgomez-a
+    - login: pschneid
+      url: https://profile.intra.42.fr/users/pschneid
+    - login: tpandya
+      url: https://profile.intra.42.fr/users/tpandya
+  myRole: Lead frontend developer and the team's top contributor (about 42% of all commits). I wrote the largest share of the web app (dashboard, deck management, the AI playground, sign-in flows, onboarding, offline storage) and parts of the backend (auth, sync, gamification, AI gateway and monitoring).
+  note: built at 42 · team of 5
+---
+
+## The product
+
+You create decks, or let AI generate cards from a topic, then study with a spaced-repetition scheduler that decides when each card comes back. The web and mobile apps keep working offline and sync when you reconnect.
+
+## How it's built
+
+A pnpm monorepo with `apps/` (API, web, mobile, landing page) and shared `packages/`: database schema, API client, an offline database, the study algorithm, i18n and shared schemas. The whole stack starts with one `docker compose up`, and database migrations run automatically.
+
+## My part
+
+I was the team's top committer and wrote the largest share of the web app, about twice as much as any teammate.
+
+- **Web app.** The dashboard and learning statistics, deck and card management, the AI playground for generating cards, sign-in, sign-up and password reset with protected-route guards, onboarding, and the offline database and app store that keep everything working without a connection. Plus the component and route tests.
+- **Design system.** Moved the web app onto the brand palette and design-system tokens.
+- **Backend.** Authentication, including password-reset emails, the offline sync store, gamification, and the AI gateway (Groq as the provider with OpenRouter as a fallback, daily quotas per user, moderation re-checks).
+- **Observability.** Prometheus metrics for AI requests, tokens and errors, with alerts on failing AI jobs.
+- **Shared packages.** The offline database and the translations (i18n).

@@ -1,0 +1,15 @@
+---
+title: C++ Modules 00–04
+rank: 4
+order: 2
+briefing:
+  summary: An introduction to C++98 over five modules covering classes, references, operator overloading, the Orthodox Canonical Form, inheritance, polymorphism and abstract classes.
+  skills: [Object-oriented design, Memory ownership, Operator overloading]
+  tech: [C++98]
+---
+
+Five short modules, each with several small exercises: a phonebook (classes and encapsulation), memory and references, a fixed-point number class with full operator overloading, a `ClapTrap` inheritance chain, and finally polymorphic `Animal`s with deep copies and abstract base classes.
+
+I wrote a small script, `generate_canonical_class.sh`, that generates the boilerplate for a class in Orthodox Canonical Form (constructor, copy constructor, assignment operator, destructor), so each exercise could focus on the new idea.
+
+**What I learned:** the rule of three, when a base class needs a virtual destructor, and how shallow copies cause double frees.

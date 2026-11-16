@@ -1,0 +1,27 @@
+---
+title: minishell
+rank: 3
+order: 4
+status: coming-soon
+briefing:
+  summary: A working Unix shell in C, modelled on bash. It handles pipes, redirections, heredocs, environment variables, signals and the built-in commands. In the Arcade it will run as the real binary inside a small Linux system in your browser.
+  skills: [Process management, Parsing, Signals, Team collaboration]
+  tech: [C, fork / execve, readline, Unix pipes]
+crew:
+  members:
+    - login: dgomez-a
+      url: https://profile.intra.42.fr/users/dgomez-a
+  myRole: I built the execution engine (forking, pipes, redirections, heredocs, exit codes) and the built-in commands. My teammate built the parser.
+---
+
+## How it works
+
+A command line goes through two stages. The **parser** splits the input into tokens, handles quotes and `$VAR` expansion, and builds a list of commands with their redirections. The **executor** then runs that list.
+
+For a pipeline such as `cat file | grep x | wc -l`, the executor creates one pipe between each pair of neighbouring commands and forks a child for each command. In each child it uses `dup2` to connect the pipe ends and apply the redirections, closes every unused file descriptor, and calls `execve`. Built-ins like `cd`, `export` and `exit` run in the shell process itself, because they have to change its own state. In a pipeline, though, they run in a child like any other command, just as bash does.
+
+Signals follow bash's rules: Ctrl-C redraws the prompt, Ctrl-\\ is ignored at the prompt, and both behave normally inside a running child.
+
+## What I learned
+
+Every leaked file descriptor eventually turns into a hung pipeline. Closing each pipe end in exactly the right process was the hardest part of the project.

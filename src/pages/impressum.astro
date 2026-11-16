@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { legal } from '../data/legal';
+---
+
+<BaseLayout title="Impressum · Samuel Castillo Glantz" description="Legal notice (Impressum) for samuelcglantz.com.">
+  <article class="max-w-[65ch] pt-14">
+    <h1 class="font-display glow-cyan text-xl">Impressum</h1>
+    <p class="mt-6 text-muted">Information according to § 5 DDG</p>
+    <address class="mt-4 text-lg not-italic">
+      {legal.name}<br />
+      {legal.street && <>{legal.street}<br /></>}
+      {legal.postalCode && `${legal.postalCode} `}{legal.city}<br />
+      {legal.country}
+    </address>
+    <h2 class="mt-10 text-xl font-bold">Contact</h2>
+    <p class="mt-3">Email: <a class="text-cyan underline underline-offset-4" href={`mailto:${legal.email}`}>{legal.email}</a></p>
+    <h2 class="mt-10 text-xl font-bold">Responsible for content</h2>
+    <p class="mt-3">{legal.name}, address as above.</p>
+  </article>
+</BaseLayout>

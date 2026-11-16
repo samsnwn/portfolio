@@ -1,0 +1,23 @@
+---
+title: Club Operations Platform
+order: 4
+status: in-development
+briefing:
+  summary: A self-hosted operations platform for a nightclub, replacing spreadsheets and scattered tools. The first module, which reads incoming invoices with OCR and puts them in a review queue, is working, along with full staff authentication.
+  skills: [Product discovery with a real client, Backend security, Document processing]
+  tech: [Python, FastAPI, SQLAlchemy, React, TypeScript, Tesseract OCR, Docker]
+---
+
+## The problem
+
+Venue management runs on spreadsheets, chat threads and paper invoices. The goal is one self-hosted system for events, promoters, shifts, inventory, orders and technical requirements, plus a local AI assistant that can answer questions about the venue's own documents. Nothing leaves the venue's own machines.
+
+## What works today
+
+- **Invoice ingestion (first module).** A separate service picks up invoices, removes duplicates by content hash, extracts the key fields with a confidence score for each (PDF text or Tesseract OCR), and puts them in a review queue. Managers confirm or correct each one, and every review is attributed to the person who did it.
+- **Authentication built in-house.** Argon2id password hashes, opaque HttpOnly session cookies, owner, admin and staff roles, a forced password change on first sign-in, and login throttling.
+- **Quality gates.** CI runs formatting, linting, database migrations and the tests for both Python services (more than 90 tests) plus the frontend build on every push.
+
+## Next
+
+Email and cloud-drive ingestion, scheduled runs, export to the venue's accounting sheet, then the events and staffing modules.

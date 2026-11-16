@@ -1,0 +1,21 @@
+---
+interface Props {
+  name: string;
+  href: string;
+  tagline: string;
+  count: number;
+  accent: 'magenta' | 'cyan' | 'warn';
+}
+const { name, href, tagline, count, accent } = Astro.props;
+const accents = {
+  magenta: 'border-magenta hover:shadow-[0_0_28px_color-mix(in_oklab,var(--color-magenta)_45%,transparent)]',
+  cyan: 'border-cyan hover:shadow-[0_0_28px_color-mix(in_oklab,var(--color-cyan)_45%,transparent)]',
+  warn: 'border-warn hover:shadow-[0_0_28px_color-mix(in_oklab,var(--color-warn)_40%,transparent)]',
+};
+---
+
+<a href={href} class={`group block border-2 bg-surface/70 p-5 transition-shadow ${accents[accent]}`}>
+  <span class="font-display block text-sm leading-relaxed text-text">{name}</span>
+  <span class="mt-3 block text-muted">{tagline}</span>
+  <span class="mt-4 block text-sm text-text/80">{count} {count === 1 ? 'project' : 'projects'}</span>
+</a>

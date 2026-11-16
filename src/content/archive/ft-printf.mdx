@@ -1,0 +1,20 @@
+---
+title: ft_printf
+rank: 1
+order: 1
+briefing:
+  summary: A reimplementation of printf. It parses the format string and dispatches the c, s, p, d, i, u, x, X and % conversions through variadic arguments, returning the exact number of bytes written.
+  skills: [Variadic functions, Format parsing, Number base conversion]
+  tech: [C, stdarg.h]
+---
+
+The format string is read one character at a time. Every `%` sends the next specifier to a handler that pulls the right type out of the `va_list` and writes it out. Each handler returns how many characters it wrote, so the total always matches what the real `printf` would return.
+
+```c
+else if (specifier == 'x')
+	chars_written += write_hex(va_arg(args, unsigned int), LOWER);
+else if (specifier == 'p')
+	chars_written += write_ptr(va_arg(args, void *));
+```
+
+**What I learned:** how variadic functions really work at the ABI level, and why `%p` with `NULL` and the `INT_MIN` case of `%d` need special handling.

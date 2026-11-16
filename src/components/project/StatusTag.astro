@@ -1,0 +1,14 @@
+---
+import type { Status } from './types';
+
+interface Props {
+  status: Status;
+}
+const labels: Partial<Record<Status, { text: string; cls: string }>> = {
+  'in-development': { text: 'IN DEVELOPMENT', cls: 'border-warn text-warn' },
+  'coming-soon': { text: 'COMING SOON', cls: 'border-magenta text-magenta' },
+};
+const tag = labels[Astro.props.status];
+---
+
+{tag && <span class={`font-display inline-block border-2 px-2 py-1 text-[0.6rem] leading-none ${tag.cls}`}>{tag.text}</span>}

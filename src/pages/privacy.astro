@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { legal } from '../data/legal';
+---
+
+<BaseLayout title="Privacy · Samuel Castillo Glantz" description="How samuelcglantz.com handles your data.">
+  <article class="prose-cartridge max-w-[65ch] pt-14 text-lg">
+    <h1 class="font-display glow-cyan text-xl">Privacy</h1>
+    <p>This is a personal portfolio. It has no accounts, no forms and no cookies.</p>
+    <h2>Hosting</h2>
+    <p>
+      The site is hosted by Vercel Inc. When you visit a page, Vercel processes technical data such as your IP address, browser
+      type and the time of the request in its server logs, in order to deliver the site and keep it secure (Art. 6(1)(f) GDPR).
+    </p>
+    <h2>Analytics</h2>
+    <p>
+      I use Vercel Web Analytics to count page views. It sets no cookies and doesn't track you across sites. Visits are only
+      counted in aggregate.
+    </p>
+    <h2>Your settings</h2>
+    <p>
+      The sound and effects switches remember your choice in your browser's local storage. That data never leaves your
+      device.
+    </p>
+    <h2>Fonts and media</h2>
+    <p>All fonts, images and videos are served from this domain. No third-party services are contacted.</p>
+    <h2>Your rights</h2>
+    <p>
+      You have the right to access, correct and delete your data, and to complain to a data protection authority. Contact:
+      <a href={`mailto:${legal.email}`}>{legal.email}</a>.
+    </p>
+  </article>
+</BaseLayout>

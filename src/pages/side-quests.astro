@@ -1,0 +1,29 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import StatusTag from '../components/project/StatusTag.astro';
+import { byOrder } from '../lib/content';
+
+const quests = byOrder((await getCollection('sideQuests')).map((e) => ({ ...e.data, id: e.id })));
+---
+
+<BaseLayout title="Side Quests · Samuel Castillo Glantz" description="Products Samuel Castillo Glantz designs and builds outside the 42 curriculum.">
+  <header class="pt-14">
+    <h1 class="font-display text-xl text-warn sm:text-3xl">Side Quests</h1>
+    <p class="mt-5 max-w-[62ch] text-lg text-text/90">Products I design and build outside 42, from client sites to self-hosted platforms.</p>
+  </header>
+  <ul class="mt-10 grid gap-4 sm:grid-cols-2">
+    {quests.map((q) => (
+      <li>
+        <a href={`/projects/${q.id}`} class="block h-full border-2 border-warn/60 bg-surface/70 p-5 hover:border-warn">
+          <span class="flex items-start justify-between gap-3">
+            <span class="text-xl font-bold">{q.title}</span>
+            <StatusTag status={q.status} />
+          </span>
+          <span class="mt-3 block text-text/85">{q.briefing.summary}</span>
+          <span class="mt-4 block text-sm text-muted">{q.briefing.tech.join(', ')}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>

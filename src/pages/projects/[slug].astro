@@ -1,0 +1,34 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import MissionBriefing from '../../components/project/MissionBriefing.astro';
+import MediaGallery from '../../components/project/MediaGallery.astro';
+import CrewLine from '../../components/project/CrewLine.astro';
+import ProjectLinks from '../../components/project/ProjectLinks.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('sideQuests');
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+interface Props {
+  entry: CollectionEntry<'sideQuests'>;
+}
+const { entry } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+---
+
+<BaseLayout title={`${d.title} · Side Quest`} description={d.briefing.summary}>
+  <article class="pt-14">
+    <a href="/side-quests" class="text-muted underline-offset-4 hover:text-cyan hover:underline">Back to Side Quests</a>
+    <h1 class="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">{d.title}</h1>
+    <div class="mt-8"><MissionBriefing briefing={d.briefing} status={d.status} /></div>
+    <MediaGallery title={d.title} video={d.video} screenshots={d.screenshots} />
+    <div class="prose-cartridge mt-12 max-w-[68ch] text-lg"><Content /></div>
+    <div class="mt-10 space-y-8">
+      <CrewLine crew={d.crew} />
+      <ProjectLinks liveUrl={d.liveUrl} repoUrl={d.repoUrl} />
+    </div>
+  </article>
+</BaseLayout>

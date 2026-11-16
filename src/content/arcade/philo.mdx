@@ -1,0 +1,35 @@
+---
+title: philosophers
+rank: 3
+order: 3
+status: coming-soon
+briefing:
+  summary: The dining philosophers problem, solved with POSIX threads and mutexes. Each philosopher is a thread competing for shared forks, and a monitor thread has to detect a death within 10 ms without causing deadlocks or data races.
+  skills: [Concurrency, Deadlock avoidance, Race-free shared state]
+  tech: [C, pthreads, Mutexes]
+---
+
+## How it works
+
+Every philosopher runs `philosopher_routine` in its own thread: take two forks, eat, sleep, think. Every piece of shared state (meal times, the "simulation over" flag) is only read or written through small helpers that lock a mutex first, such as `get_bool`, `set_bool` and `set_long`. That keeps every access race-free by design rather than by luck.
+
+A separate monitor thread waits until every philosopher has started, then watches for starvation:
+
+```c
+while (!simulation_ended(sim))
+{
+	i = -1;
+	while (++i < sim->philo_count && !simulation_ended(sim))
+		if (philosopher_died(sim->philosophers + i))
+		{
+			set_bool(&sim->sim_lock, &sim->is_over, TRUE);
+			print_state(DIED, sim->philosophers + i);
+		}
+}
+```
+
+A single philosopher gets a special routine, since with only one fork they can never eat.
+
+## What I learned
+
+Working out the locking order on paper before writing code. With threads, testing alone can't prove a program is correct.

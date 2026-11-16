@@ -1,0 +1,46 @@
+---
+title: ft_irc
+rank: 5
+order: 3
+longform: true
+briefing:
+  summary: An IRC server in C++98 that real IRC clients can connect to. It handles many clients in a single thread with non-blocking sockets and poll(), and supports channels, operators, private messages and modes.
+  skills: [Network programming, Protocol implementation, Event-driven I/O, Team collaboration]
+  tech: [C++98, TCP sockets, poll(2)]
+crew:
+  members:
+    - login: dgomez-a
+      url: https://profile.intra.42.fr/users/dgomez-a
+  myRole: I built the server core (socket setup, the poll() event loop, per-client read and write buffers, disconnects) and the PING, QUIT, PRIVMSG and NOTICE commands. My teammate built most of the channel commands.
+---
+
+### Architecture
+
+```text
+ IRC client ──TCP──┐
+ IRC client ──TCP──┼──▶  Server  (one thread, one poll() loop)
+ IRC client ──TCP──┘       │
+                           ├─ listening socket: accept() new Client
+                           ├─ readable client:  recv() into its buffer,
+                           │                    split on "\r\n", run command
+                           └─ writable client:  flush its write buffer
+                               │
+                   Client ◀────┴────▶ Channel (members, operators, modes)
+```
+
+Every socket is set to `O_NONBLOCK` and watched by a single `poll()` call:
+
+```cpp
+if (poll(&_pfds[0], _pfds.size(), -1) < 0)
+{
+	if (!_running)
+		break;
+	throw PollFailedError();
+}
+```
+
+A client's data can arrive split across several reads, or several commands can arrive in one read, so every client has its own input buffer and only complete `\r\n` lines are processed. Replies go into a per-client write buffer that is sent when the socket is writable. That way a slow client can never block the whole server.
+
+The server handles registration (`PASS`, `NICK`, `USER`), `JOIN`, `PART`, `LIST`, `NAMES`, `PRIVMSG`, `NOTICE`, `KICK`, `INVITE`, `TOPIC`, `MODE` (`i t k o l`), `PING` and `QUIT`, with the numeric replies defined in RFC 2812. We tested it with the real IRC clients irssi and WeeChat, and with raw `nc` sessions.
+
+**What I learned:** how TCP really delivers data (as a stream of bytes, not messages), how to read an RFC, and how to split a codebase between two people with clear interfaces.

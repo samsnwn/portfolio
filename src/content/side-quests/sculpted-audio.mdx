@@ -1,0 +1,17 @@
+---
+title: Sculpted Audio
+order: 1
+status: live
+liveUrl: https://sculpted-audio.com
+briefing:
+  summary: The production website for a Berlin audio studio, built with Next.js 16 and React 19. It's hardened with rate limiting and bot protection, has strict environment validation, and is covered by Playwright end-to-end tests.
+  skills: [Production web development, Security hardening, Testing and CI]
+  tech: [Next.js, React, TypeScript, Redis, Playwright, Vercel]
+---
+
+A real client site, running in production. Besides the design and build, most of the work went into making it robust:
+
+- **Phased hardening plan.** Every change went through its own pull request that had to pass lint, typecheck, tests and build, then be checked on a preview deployment before going to production.
+- **Abuse protection.** Rate limiting backed by Redis and bot protection on the contact flow.
+- **Environment contract.** Environment variables are validated with Zod schemas, so a misconfigured deployment fails at startup instead of in front of a visitor.
+- **End-to-end tests** with Playwright, including automated accessibility checks with axe.

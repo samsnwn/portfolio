@@ -1,0 +1,37 @@
+---
+import type { Briefing, Status } from './types';
+import StatusTag from './StatusTag.astro';
+
+interface Props {
+  briefing: Briefing;
+  status?: Status;
+}
+const { briefing, status } = Astro.props;
+const id = 'briefing-heading';
+---
+
+<section aria-labelledby={id} class="neon-border relative rounded-sm bg-surface/80 p-5 sm:p-7">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <h2 id={id} class="font-display glow-cyan text-xs sm:text-sm">Mission Briefing</h2>
+    {status && <StatusTag status={status} />}
+  </div>
+  <p class="mt-4 max-w-[65ch] text-lg leading-relaxed sm:text-xl">{briefing.summary}</p>
+  <div class="mt-6 grid gap-5 sm:grid-cols-2">
+    <div>
+      <h3 class="text-sm font-semibold text-muted">Skills shown</h3>
+      <ul class="mt-2 space-y-1">
+        {briefing.skills.map((s) => (
+          <li class="flex gap-2"><span aria-hidden="true" class="text-magenta">▸</span>{s}</li>
+        ))}
+      </ul>
+    </div>
+    <div>
+      <h3 class="text-sm font-semibold text-muted">Built with</h3>
+      <ul class="mt-2 flex flex-wrap gap-2">
+        {briefing.tech.map((t) => (
+          <li class="rounded-sm border border-cyan/50 px-2 py-0.5 text-sm text-cyan">{t}</li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>

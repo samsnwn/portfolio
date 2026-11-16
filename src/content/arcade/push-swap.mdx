@@ -1,0 +1,29 @@
+---
+title: push_swap
+rank: 2
+order: 1
+status: coming-soon
+briefing:
+  summary: Sorts a stack of integers using two stacks and eleven allowed moves, in as few moves as possible. My solution uses a cost-based greedy algorithm that scores every possible move before making one.
+  skills: [Algorithm design, Complexity analysis, Linked lists in C]
+  tech: [C, Makefile]
+---
+
+## How it works
+
+Only two stacks (`a` and `b`) and moves like `sa`, `pb`, `ra` and `rrr` are allowed. Small inputs (three numbers or fewer) use a hard-coded `sort_three`. Larger inputs push everything except three numbers onto `b`, then bring them back one at a time.
+
+For each node in `b`, the program finds its **target** in `a` (the smallest number bigger than it), then adds up how many rotations both stacks need to line up. The cheapest node wins, and when its moves are executed, rotations that go the same way on both stacks are merged into `rr` or `rrr`:
+
+```c
+calculate_costs(a, b);          // rotations needed for every node in b
+best = find_best_move(b);       // cheapest node overall
+do_rotations(a, b, best);       // shared rr / rrr where possible
+pa(a, b);
+```
+
+A final `rotate_to_min` puts the smallest number on top.
+
+## What I learned
+
+Measuring before optimising. Counting moves on random inputs of 100 and 500 numbers showed where the greedy choice paid off and where it didn't.

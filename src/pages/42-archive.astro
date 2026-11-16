@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CartridgeCard from '../components/project/CartridgeCard.astro';
+import { groupByRank } from '../lib/content';
+
+const entries = await getCollection('archive');
+const groups = groupByRank(entries.map((e) => ({ entry: e, rank: e.data.rank, order: e.data.order })));
+---
+
+<BaseLayout title="42 Archive · Samuel Castillo Glantz" description="Every 42 common-core project I cleared, with short walkthroughs of how each one works.">
+  <header class="pt-14 pb-4">
+    <h1 class="font-display glow-cyan text-xl sm:text-3xl">42 Archive</h1>
+    <p class="mt-5 max-w-[62ch] text-lg text-text/90">
+      42 is a peer-to-peer coding school: no teachers, no lectures, every project graded by other students. These are the
+      common-core projects that aren't in the Arcade. Open a cartridge to see how it works.
+    </p>
+  </header>
+
+  {groups.map((g) => (
+    <section class="mt-14" aria-labelledby={`rank-${g.rank}`}>
+      <h2 id={`rank-${g.rank}`} class="font-display flex items-center gap-4 text-sm text-magenta">
+        RANK {g.rank} · CLEARED
+        <span aria-hidden="true" class="h-px flex-1 bg-magenta/40"></span>
+      </h2>
+      <div class="mt-6 grid items-start gap-5 sm:grid-cols-2">
+        {g.items.map(({ entry }) => <CartridgeCard entry={entry} />)}
+      </div>
+    </section>
+  ))}
+</BaseLayout>

@@ -1,0 +1,20 @@
+---
+const files = [
+  { label: 'English', lang: 'en', href: '/cv/SamuelCastilloCV_eng.pdf' },
+  { label: 'Deutsch', lang: 'de', href: '/cv/SamuelCastilloCV_de.pdf' },
+];
+---
+
+<div class="flex flex-wrap items-center gap-3">
+  <span class="text-muted">Download CV</span>
+  {files.map((f) => (
+    <a
+      class="border-2 border-magenta px-4 py-2 font-semibold text-magenta shadow-[0_0_16px_color-mix(in_oklab,var(--color-magenta)_35%,transparent)] hover:bg-magenta hover:text-bg"
+      href={f.href}
+      hreflang={f.lang}
+      download
+    >
+      {f.label}
+    </a>
+  ))}
+</div>

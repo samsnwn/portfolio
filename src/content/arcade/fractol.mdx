@@ -1,0 +1,32 @@
+---
+title: fract-ol
+rank: 2
+order: 2
+status: coming-soon
+briefing:
+  summary: An interactive explorer for the Mandelbrot and Julia fractals, written in C on the MiniLibX graphics library. You zoom with the mouse wheel, and the program recalculates every pixel from complex-number maths on each frame.
+  skills: [Complex-number maths, Event-driven graphics, Pixel-buffer rendering]
+  tech: [C, MiniLibX, X11]
+---
+
+## How it works
+
+Each pixel maps to a point on the complex plane. The program repeats `z = z² + c` until `|z|` goes past 2 or the iteration limit is reached, and the number of iterations sets the pixel's colour. Julia sets reuse the same loop with `c` fixed and `z` starting at the pixel:
+
+```c
+while (i < view->max_iter)
+{
+	x_temp = z.real * z.real - z.imag * z.imag + c.real;
+	z.imag = 2 * z.real * z.imag + c.imag;
+	z.real = x_temp;
+	if (z.real * z.real + z.imag * z.imag > 4.0)
+		return (i);
+	i++;
+}
+```
+
+Pixels are written directly into an image buffer (`mlx_get_data_addr`) and copied to the window once per frame. Drawing pixels one at a time would be far too slow. Zooming keeps the point under the cursor fixed, so you can follow a detail down into the fractal.
+
+## What I learned
+
+How event loops and frame buffers work underneath a graphics API, and how floating-point precision runs out at deep zoom.

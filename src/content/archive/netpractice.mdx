@@ -1,0 +1,15 @@
+---
+title: NetPractice
+rank: 4
+order: 1
+briefing:
+  summary: Ten networking puzzles about TCP/IP addressing, solved by hand. Each one means fixing IP addresses, subnet masks, gateways and routing tables until every host can reach its target.
+  skills: [IPv4 subnetting, Routing, Network debugging]
+  tech: [TCP/IP, CIDR]
+---
+
+Each level shows a small network diagram with broken settings. You get it working by choosing addresses and masks so hosts sit in the right subnets, making sure subnets don't overlap, adding default routes on hosts and routers, and avoiding reserved ranges.
+
+The core skill is quick binary arithmetic on masks. For example, a `/26` splits a `/24` into four blocks of 64 addresses, and 62 of those can be hosts in each block.
+
+**What I learned:** to read a routing problem as "which hop doesn't know where to send this packet?" That helps every time I debug Docker networks or VPS firewalls.

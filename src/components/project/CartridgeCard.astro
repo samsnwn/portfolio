@@ -1,0 +1,30 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import CrewLine from './CrewLine.astro';
+
+interface Props {
+  entry: CollectionEntry<'archive'>;
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+---
+
+<details class:list={['cartridge group', d.longform && 'sm:col-span-2']} id={entry.id}>
+  <summary class="cursor-pointer list-none p-5 pt-7 [&::-webkit-details-marker]:hidden">
+    <span class="flex flex-wrap items-baseline justify-between gap-2">
+      <span class="font-display text-sm text-cyan">{d.title}</span>
+      <span class="text-sm text-muted">Rank {d.rank}</span>
+    </span>
+    <span class="mt-3 block">{d.briefing.summary}</span>
+    <span class="mt-3 flex flex-wrap gap-2">
+      {d.briefing.skills.map((s) => <span class="rounded-sm bg-bg/70 px-2 py-0.5 text-sm text-muted">{s}</span>)}
+    </span>
+    <span class="mt-4 block text-sm font-semibold text-magenta group-open:hidden">Show walkthrough</span>
+    <span class="mt-4 hidden text-sm font-semibold text-magenta group-open:block">Hide walkthrough</span>
+  </summary>
+  <div class="prose-cartridge border-t border-cyan/30 px-5 pt-4 pb-6">
+    <Content />
+    <div class="mt-6"><CrewLine crew={d.crew} /></div>
+  </div>
+</details>

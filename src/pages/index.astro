@@ -1,0 +1,54 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CvButton from '../components/project/CvButton.astro';
+import WorldCard from '../components/project/WorldCard.astro';
+import { site } from '../data/site';
+
+const arcade = await getCollection('arcade');
+const archive = await getCollection('archive');
+const quests = await getCollection('sideQuests');
+---
+
+<BaseLayout title={`${site.name} · ${site.role}`} description={site.pitch}>
+  <section class="hero relative -mx-4 overflow-hidden px-4 pt-16 pb-28 sm:-mx-8 sm:px-8 sm:pt-24" aria-labelledby="hero-title">
+    <div class="hero-grid" aria-hidden="true"></div>
+    <div class="relative">
+      <h1 id="hero-title" class="font-display fx-glitch glow-magenta text-[1.6rem] leading-tight sm:text-5xl">PRESS START</h1>
+      <p class="mt-8 text-3xl font-bold tracking-tight sm:text-5xl">{site.name}</p>
+      <p class="glow-cyan mt-2 text-xl sm:text-2xl">{site.role}</p>
+      <p class="mt-6 max-w-[60ch] text-lg text-text/90">{site.pitch}</p>
+      <div class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-5">
+        <a href="/arcade" class="font-display bg-magenta px-5 py-4 text-xs text-bg shadow-[0_0_24px_color-mix(in_oklab,var(--color-magenta)_55%,transparent)] hover:bg-cyan">
+          <span class="fx-blink" aria-hidden="true">▶ </span>Play
+        </a>
+        <CvButton />
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="worlds-title" class="mt-4">
+    <h2 id="worlds-title" class="sr-only">Choose a world</h2>
+    <div class="grid gap-4 md:grid-cols-3">
+      <WorldCard name="Arcade" href="/arcade" accent="magenta" tagline="My 42 projects, playable in the browser." count={arcade.length} />
+      <WorldCard name="42 Archive" href="/42-archive" accent="cyan" tagline="Every other 42 project, rank by rank." count={archive.length} />
+      <WorldCard name="Side Quests" href="/side-quests" accent="warn" tagline="Products I build outside the curriculum." count={quests.length} />
+    </div>
+  </section>
+
+  <section id="about" aria-labelledby="about-title" class="mt-20 grid gap-8 md:grid-cols-[1fr_1fr]">
+    <div>
+      <h2 id="about-title" class="font-display glow-cyan text-lg sm:text-xl">About</h2>
+      {site.about.map((p) => <p class="mt-4 max-w-[60ch] text-text/90">{p}</p>)}
+    </div>
+    <div id="contact" aria-labelledby="contact-title">
+      <h2 id="contact-title" class="font-display glow-cyan text-lg sm:text-xl">Contact</h2>
+      <ul class="mt-4 space-y-3 text-lg">
+        <li><a class="text-cyan underline-offset-4 hover:underline" href={`mailto:${site.email}`}>{site.email}</a></li>
+        <li><a class="text-cyan underline-offset-4 hover:underline" href={site.github} rel="noopener">GitHub</a></li>
+        <li><a class="text-cyan underline-offset-4 hover:underline" href={site.linkedin} rel="noopener">LinkedIn</a></li>
+      </ul>
+      <div class="mt-6"><CvButton /></div>
+    </div>
+  </section>
+</BaseLayout>

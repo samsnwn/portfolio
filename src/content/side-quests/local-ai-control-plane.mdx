@@ -1,0 +1,26 @@
+---
+title: Local AI Control Plane
+order: 3
+status: in-development
+briefing:
+  summary: A control plane for running private AI on your own hardware. It has a NestJS management API for registering and managing customer nodes, with the API contract written first in OpenAPI and stored in PostgreSQL through Drizzle.
+  skills: [Backend architecture, API design, Monorepo tooling]
+  tech: [TypeScript, NestJS, Drizzle ORM, PostgreSQL, OpenAPI, Turborepo, Docker]
+---
+
+## Where it's going
+
+Companies that want AI without sending their data to a third party will run models on their own machines. This project is the management layer for a fleet of those machines: registering nodes, checking their health, and later deploying reusable AI agents to them.
+
+## What works today
+
+The first milestone focuses on the **Control Plane API**:
+
+- A NestJS service in a Turborepo monorepo, with an operator dashboard (React and Vite) scaffolded alongside it.
+- **Contract first.** The OpenAPI definitions live in a shared `contracts` package, and the API is implemented against them.
+- **Persistence** with Drizzle ORM on PostgreSQL, run locally through Docker Compose.
+- Node registration, the building block for everything that comes next.
+
+## Next
+
+Node heartbeats and health, the operator dashboard, then the agent runtime.

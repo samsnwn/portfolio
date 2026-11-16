@@ -1,0 +1,32 @@
+---
+title: miniRT
+rank: 4
+order: 5
+status: coming-soon
+briefing:
+  summary: A ray tracer written from scratch in C. It reads a scene file (camera, lights, spheres, planes, cylinders) and renders it with Phong lighting and hard shadows, and you can move objects and the camera with the keyboard.
+  skills: [3D maths, File parsing and validation, Rendering, Team collaboration]
+  tech: [C, MiniLibX, Linear algebra]
+crew:
+  members:
+    - login: dgomez-a
+      url: https://profile.intra.42.fr/users/dgomez-a
+  myRole: I built the scene parser with strict validation of `.rt` files, and the keyboard and resize event system that re-renders after every change. My teammate built the ray-object intersection and lighting code.
+---
+
+## How it works
+
+A `.rt` file describes the scene, one element per line:
+
+```text
+A  0.2              255,255,255
+C  -50,0,20  0,0,1  70
+L  -40,0,30  0.7    255,255,255
+sp 0,0,20.6  12.6   10,0,255
+```
+
+The parser rejects anything malformed with a clear error: missing or duplicate camera, out-of-range ratios, normal vectors that aren't normalised, and so on. Each pixel then sends a ray from the camera, finds the nearest object it hits, and adds up the ambient light plus diffuse and specular light from each light source that isn't blocked by another object.
+
+## What I learned
+
+Vector maths becomes intuitive once you have to debug it pixel by pixel. And parsing untrusted input is a real job in its own right.

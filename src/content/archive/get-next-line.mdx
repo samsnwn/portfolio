@@ -1,0 +1,24 @@
+---
+title: get_next_line
+rank: 1
+order: 2
+briefing:
+  summary: A function that returns one line at a time from any file descriptor, with any buffer size. It keeps unread data between calls in a static buffer.
+  skills: [Static state, Buffered I/O, Memory-leak-free code]
+  tech: [C, read(2)]
+---
+
+`read` gives you a fixed number of bytes, not whole lines. The function keeps a static buffer, reads more until a newline appears, returns the line, and keeps whatever comes after it for the next call:
+
+```c
+buffer = read_to_buffer(fd, buffer);
+if (!buffer)
+	return (NULL);
+line = extract_line(buffer);
+buffer = update_buffer(buffer);
+return (line);
+```
+
+It works the same with `BUFFER_SIZE=1` and `BUFFER_SIZE=10000000`, and it leaks nothing at end-of-file.
+
+**What I learned:** what `static` storage really means, and how to keep memory ownership clear when a function returns heap memory that the caller has to free.
