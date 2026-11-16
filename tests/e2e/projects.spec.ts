@@ -44,11 +44,15 @@ test('every video on side quest pages is muted', async ({ page }) => {
   }
 });
 
+const comingSoon = (slug: string) =>
+  /^status:\s*coming-soon\s*$/m.test(readFileSync(`src/content/arcade/${slug}.mdx`, 'utf8'));
+
 for (const slug of slugs('arcade')) {
-  test(`arcade ${slug} shows COMING SOON after the briefing`, async ({ page }) => {
+  test(`arcade ${slug} opens with the Mission Briefing`, async ({ page }) => {
     const res = await page.goto(`/play/${slug}`);
     expect(res?.status()).toBe(200);
     await expect(page.locator('main h2').first()).toHaveText('Mission Briefing');
-    await expect(page.locator('main')).toContainText('COMING SOON');
+    if (comingSoon(slug)) await expect(page.locator('main')).toContainText('COMING SOON');
+    else await expect(page.locator('main')).not.toContainText('COMING SOON');
   });
 }
