@@ -4,6 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import MissionBriefing from '../../components/project/MissionBriefing.astro';
 import CrewLine from '../../components/project/CrewLine.astro';
 import PushSwapGame from '../../components/games/PushSwapGame';
+import FractolGame from '../../components/games/FractolGame';
 
 export async function getStaticPaths() {
   const entries = await getCollection('arcade');
@@ -20,6 +21,8 @@ const { Content } = await render(entry);
 /** Shown under a playable game: what is actually running. */
 const gameNotes: Record<string, string> = {
   'push-swap': 'This is my original push_swap C code, compiled to WebAssembly. Every move you make runs my C functions.',
+  fractol:
+    'This is my original fract-ol C code, compiled to WebAssembly. MiniLibX is replaced by a small web version that draws to this canvas.',
 };
 ---
 
@@ -32,6 +35,7 @@ const gameNotes: Record<string, string> = {
 
     <section aria-label="Game" class="cabinet mt-12">
       {entry.id === 'push-swap' && <PushSwapGame client:visible />}
+      {entry.id === 'fractol' && <FractolGame client:visible />}
       {d.status === 'coming-soon' && (
         <div class="grid min-h-72 place-items-center p-8 text-center">
           <div>
