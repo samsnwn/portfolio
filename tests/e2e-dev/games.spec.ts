@@ -26,3 +26,10 @@ test('philosophers runs on the dev server', async ({ page }) => {
   await game.getByRole('button', { name: 'Start' }).click();
   await expect(game.getByRole('status')).toHaveText(/Everyone ate 3 meals/, { timeout: 30_000 });
 });
+
+test('miniRT renders on the dev server', async ({ page }) => {
+  await page.goto('/play/minirt');
+  await page.getByRole('region', { name: 'Game' }).scrollIntoViewIfNeeded();
+  const canvas = page.locator('canvas[aria-label="miniRT render"]');
+  await expect.poll(async () => Number(await canvas.getAttribute('data-frames')), { timeout: 30_000 }).toBeGreaterThanOrEqual(1);
+});

@@ -12,12 +12,33 @@ const KEYSYMS = {
   Escape: 65307,
 };
 
+// miniRT is compiled with the real X11 keysyms (shim/X11/keysym.h).
+const MINIRT_KEYSYMS = {
+  ArrowLeft: 0xff51,
+  ArrowUp: 0xff52,
+  ArrowRight: 0xff53,
+  ArrowDown: 0xff54,
+  Escape: 0xff1b,
+  '+': 61, // miniRT's PLUS_KEY is the "=" key
+  '=': 61,
+  '-': 0x2d,
+  1: 0x31,
+  2: 0x32,
+};
+for (const ch of 'acdfghstuvwxyz') MINIRT_KEYSYMS[ch] = ch.charCodeAt(0);
+
 /** X11 event numbers used with Module.mlxweb.queue. */
 export const X_EVENT = { KeyPress: 2, ButtonPress: 4, DestroyNotify: 17 };
 
 /** Maps a KeyboardEvent.key to the X11 keysym MiniLibX would deliver, or null. */
 export function keyToKeysym(key) {
   return Object.hasOwn(KEYSYMS, key) ? KEYSYMS[key] : null;
+}
+
+/** Maps a KeyboardEvent.key to the keysym miniRT handles, or null. Letters are case-insensitive. */
+export function minirtKeyToKeysym(key) {
+  const k = key.length === 1 ? key.toLowerCase() : key;
+  return Object.hasOwn(MINIRT_KEYSYMS, k) ? MINIRT_KEYSYMS[k] : null;
 }
 
 /** Maps a wheel delta to the X11 button MiniLibX reports: 4 = scroll up, 5 = scroll down. */
