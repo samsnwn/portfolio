@@ -53,14 +53,43 @@ test.describe('fract-ol game', () => {
     expect((await picture(page)).hash).not.toBe(before.hash);
   });
 
-  test('wheel zooms without scrolling the page', async ({ page }) => {
+  test('wheel zooms without scrolling the page once the picture is focused', async ({ page }) => {
     await open(page);
     const before = await picture(page);
-    await canvas(page).hover();
+    await canvas(page).click();
+    await expect(canvas(page)).toBeFocused();
     const scrollY = await page.evaluate(() => window.scrollY);
     await afterFrame(page, () => page.mouse.wheel(0, -200));
     expect(await page.evaluate(() => window.scrollY)).toBe(scrollY);
     expect((await picture(page)).hash).not.toBe(before.hash);
+  });
+
+  test('wheel scrolls the page normally when the picture is not focused', async ({ page }) => {
+    await open(page);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    const drawn = await frames(page);
+    await canvas(page).hover();
+    const scrollY = await page.evaluate(() => window.scrollY);
+    await page.mouse.wheel(0, 300);
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(scrollY);
+    await page.waitForTimeout(500);
+    expect(await frames(page)).toBe(drawn);
+  });
+
+  test('holding a key does not queue up a backlog of frames', async ({ page }) => {
+    await open(page);
+    await canvas(page).focus();
+    const drawn = await frames(page);
+    // What a held arrow key does: dozens of repeated keydown events.
+    await canvas(page).evaluate((el) => {
+      for (let i = 0; i < 40; i++) el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+    });
+    await page.waitForTimeout(2500);
+    expect((await frames(page)) - drawn).toBeLessThanOrEqual(3);
+    expect((await frames(page)) - drawn).toBeGreaterThanOrEqual(1);
+    // Esc must still get through straight away.
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('region', { name: 'Game' }).getByText('GAME OVER')).toBeVisible({ timeout: 3000 });
   });
 
   test('Escape shows GAME OVER and Restart recovers', async ({ page }) => {

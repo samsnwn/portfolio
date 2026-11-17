@@ -32,7 +32,10 @@ const PRESETS = [
 
 type Status = 'loading' | 'running' | 'over' | 'error';
 
-/** A slow frame must not let scroll events pile up behind it. */
+/**
+ * Every event makes the C redraw the whole picture. A held key or a fast wheel sends events far
+ * quicker than frames can be drawn, so extra ones are dropped instead of queued up.
+ */
 const MAX_QUEUED = 2;
 
 export default function FractolGame() {
@@ -145,7 +148,8 @@ export default function FractolGame() {
     const onWheel = (e: WheelEvent) => {
       const keymap = keymapRef.current;
       const host = hostRef.current;
-      if (!keymap || !host) return;
+      // Only take over the wheel once the visitor has clicked the picture: otherwise the page scrolls.
+      if (!keymap || !host || document.activeElement !== canvas) return;
       e.preventDefault();
       const button = keymap.wheelToButton(e.deltaY);
       if (button === null || host.queue.length >= MAX_QUEUED) return;
@@ -164,6 +168,8 @@ export default function FractolGame() {
     const keysym = keymap.keyToKeysym(e.key);
     if (keysym === null) return;
     e.preventDefault();
+    // Esc always gets through; other keys are dropped while frames are still pending.
+    if (e.key !== 'Escape' && hostRef.current.queue.length >= MAX_QUEUED) return;
     send([keymap.X_EVENT.KeyPress, keysym, 0, 0]);
   };
 
@@ -259,8 +265,8 @@ export default function FractolGame() {
         </button>
       </div>
       <p className="mt-3 text-sm text-muted">
-        With a keyboard: click the picture, then use the arrow keys to move, + and - for detail, and scroll to zoom. Esc quits the
-        program.
+        With a mouse and keyboard: click the picture first, then scroll to zoom, use the arrow keys to move, and + and - for
+        detail. Esc quits the program.
       </p>
     </div>
   );

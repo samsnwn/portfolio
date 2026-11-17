@@ -11,15 +11,17 @@ briefing:
 
 ## How it works
 
-Only two stacks (`a` and `b`) and moves like `sa`, `pb`, `ra` and `rrr` are allowed. Small inputs (three numbers or fewer) use a hard-coded `sort_three`. Larger inputs push everything except three numbers onto `b`, then bring them back one at a time.
+Only two stacks (`a` and `b`) and moves like `sa`, `pb`, `ra` and `rrr` are allowed. Two numbers need at most one `sa`, and three numbers use a hard-coded `sort_three`. Larger inputs push everything except three numbers onto `b`, then bring them back one at a time.
 
 For each node in `b`, the program finds its **target** in `a` (the smallest number bigger than it), then adds up how many rotations both stacks need to line up. The cheapest node wins, and when its moves are executed, rotations that go the same way on both stacks are merged into `rr` or `rrr`:
 
-```c
-calculate_costs(a, b);          // rotations needed for every node in b
-best = find_best_move(b);       // cheapest node overall
-do_rotations(a, b, best);       // shared rr / rrr where possible
-pa(a, b);
+In outline (simplified from the real loop):
+
+```text
+calculate_costs      rotations needed for every node in b
+find_best_move       pick the cheapest node overall
+do_rotations         line both stacks up, sharing rr / rrr where possible
+pa                   push it back onto a
 ```
 
 A final `rotate_to_min` puts the smallest number on top.
