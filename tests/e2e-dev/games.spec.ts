@@ -17,3 +17,12 @@ test('fract-ol draws on the dev server', async ({ page }) => {
   const canvas = page.locator('canvas[aria-label="fract-ol render"]');
   await expect.poll(async () => Number(await canvas.getAttribute('data-frames')), { timeout: 30_000 }).toBeGreaterThanOrEqual(1);
 });
+
+test('philosophers runs on the dev server', async ({ page }) => {
+  await page.goto('/play/philo');
+  const game = page.getByRole('region', { name: 'Game' });
+  await game.scrollIntoViewIfNeeded();
+  await game.getByRole('button', { name: 'Everyone eats' }).click({ timeout: 30_000 });
+  await game.getByRole('button', { name: 'Start' }).click();
+  await expect(game.getByRole('status')).toHaveText(/Everyone ate 3 meals/, { timeout: 30_000 });
+});
