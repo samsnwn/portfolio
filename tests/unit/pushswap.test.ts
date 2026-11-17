@@ -40,7 +40,8 @@ describe('randomStack', () => {
 describe('engine (original C compiled to wasm)', () => {
   let engine: Engine;
   beforeAll(async () => {
-    engine = await loadEngine(moduleUrl);
+    // Node imports the module directly; the browser uses importAtRuntime (see src/lib/native.ts).
+    engine = await loadEngine(moduleUrl, (url) => import(/* @vite-ignore */ url));
   });
 
   it('lists the 11 operations in code order', () => {

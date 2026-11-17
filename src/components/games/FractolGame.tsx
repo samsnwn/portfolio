@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { loadNative } from '../../lib/native';
+import { importAtRuntime, loadNative } from '../../lib/native';
 
 const MODULE_URL = '/native/fractol/fractol.mjs';
 const KEYMAP_URL = '/native/fractol/keymap.mjs';
@@ -68,7 +68,7 @@ export default function FractolGame() {
       try {
         const retry = attemptRef.current ? `?retry=${attemptRef.current}` : '';
         const [keymap, mod] = await Promise.all([
-          import(/* @vite-ignore */ KEYMAP_URL + retry) as Promise<Keymap>,
+          importAtRuntime<Keymap>(KEYMAP_URL + retry),
           loadNative<FractolModule>(MODULE_URL + retry, {
             print: () => {},
             printErr: () => {},

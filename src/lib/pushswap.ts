@@ -1,4 +1,4 @@
-import { loadNative } from './native';
+import { loadNative, type ModuleImporter } from './native';
 
 export type Op = 'sa' | 'sb' | 'ss' | 'pa' | 'pb' | 'ra' | 'rb' | 'rr' | 'rra' | 'rrb' | 'rrr';
 
@@ -89,9 +89,9 @@ export function createEngine(mod: PushSwapModule, takeOutput: () => string[]): E
 }
 
 /** Loads the compiled push_swap and wraps it. */
-export async function loadEngine(url: string = PUSH_SWAP_MODULE_URL): Promise<Engine> {
+export async function loadEngine(url: string = PUSH_SWAP_MODULE_URL, importModule?: ModuleImporter): Promise<Engine> {
   let lines: string[] = [];
-  const mod = await loadNative<PushSwapModule>(url, { print: (line) => lines.push(line) });
+  const mod = await loadNative<PushSwapModule>(url, { print: (line) => lines.push(line) }, importModule);
   return createEngine(mod, () => {
     const taken = lines;
     lines = [];
